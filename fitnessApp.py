@@ -1,4 +1,7 @@
+import os
+import time
 from flask import Flask, render_template, request, session, redirect
+from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -7,6 +10,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 client = MongoClient()
 db = client.fitnessDB
 userCollection = db.users
+attachmentCollection = db.attachments
 
 UPLOAD_FOLDER = '/home/zack/jhu/agile/fitness-progress/static/pictures'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -35,9 +39,23 @@ def logout():
   session.pop('username', None)
   return render_template('login.html')
 
-@app.route('/pictures')
+@app.route('/pictures', methods=['GET', 'POST'])
 def pictures():
-  return render_template('pictures.html')
+  if request.method == 'POST':
+    if 'file' not in request.files:
+      return render_template('pictures.html', message="No File Found. Please Try Again", success=0)
+    file = request.files['file']
+    if file.filename == '':
+      return render_template('pictures.html', message="No File Found. Please Try Again", success=0)
+    if file and allowed_file(file.filename):
+      filepath = os.path.join(UPLOAD_FOLDER,secure_filename(file.filename))
+      file.save(filepath)
+      attachmentCollection.insert_one(
+        {"name": file.filename, "location": filepath, "date": time.time(), "angle": request.form['angle'], "weight": request.form['weight'], "notes": request.form['notes'], "user": session['username']}
+      )
+      return render_template('pictures.html', message="Upload Succesful", success=1)
+  else:
+    return render_template('pictures.html')
 
 #Helper functions. TODO move to utils
 def loginUser(username, password):

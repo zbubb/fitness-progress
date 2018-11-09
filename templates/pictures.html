@@ -25,10 +25,30 @@
     </nav>
 
     <div class="container">
+      {% if message and success%}
+        <p style="color:green;">{{ message }}!</p>
+      {% elif message %}
+        <p style="color:red;">{{ message }}!</p>
+      {% endif %}
+
       <h1>Upload new File</h1>
-      <form method=post action=pictures/upload enctype=multipart/form-data>
+      <form method=post action=pictures enctype=multipart/form-data>
+        <div class="group mb-3">
+          <strong>Angle</strong><br>
+          <input type="radio" name="angle" value="front"> Front<br>
+          <input type="radio" name="angle" value="back"> Back<br>
+          <input type="radio" name="angle" value="side"> Side 
+        </div>
+        <div class="group mb-3">
+          <strong>Weight</strong><br>
+          <input type="number" name="weight">
+        </div>
+        <div class="group mb-3">
+          <strong>Notes</strong><br>
+          <textarea name="notes" rows="3"></textarea>
+        </div>
         <input type=file name=file>
-        <input type=submit value=Upload>
+        <input class="btn" type=submit value=Upload>
       </form>
     </div>
 
