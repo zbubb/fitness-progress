@@ -27,7 +27,7 @@
     <div class="container-fluid">
       <div class="row" style="height:100vh">
         <div class="col-2 bg-light">
-          <h3>Upload new File</h3>
+          <h3>Upload new Picture</h3>
           <form method=post action=pictures enctype=multipart/form-data>
             <div class="group mb-3">
               <strong>Angle</strong><br>
@@ -54,7 +54,16 @@
             {% elif message %}
               <p style="color:red;">{{ message }}!</p>
             {% endif %}
-            <h1>Files</h1>
+            <h1>Pictures</h1>
+            <ul class="list-group">
+              {% for pic in picDict %}
+                <li class="list-group-item">
+                  <strong>Weight:</strong> {{ pic.weight }}<br>
+                  <strong>Notes:</strong> {{ pic.notes }}<br>
+                  <img  src="{{ pic.location }}" style="height: 250px;"><!--style="transform:rotate(90deg);" class="img-fluid"-->
+                </li>
+              {% endfor %}
+            </ul>
           </div>
         </div>
       </div>

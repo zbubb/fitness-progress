@@ -13,6 +13,7 @@ userCollection = db.users
 attachmentCollection = db.attachments
 
 UPLOAD_FOLDER = '/home/zack/jhu/agile/fitness-progress/static/pictures'
+PICTURE_FOLDER = '/static/pictures'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 #Login and logout routes
@@ -48,14 +49,16 @@ def pictures():
     if file.filename == '':
       return render_template('pictures.html', message="No File Found. Please Try Again", success=0)
     if file and allowed_file(file.filename):
-      filepath = os.path.join(UPLOAD_FOLDER,secure_filename(file.filename))
+      filepath = os.path.join(UPLOAD_FOLDER, secure_filename(file.filename))
       file.save(filepath)
+      location = os.path.join(PICTURE_FOLDER, secure_filename(file.filename))
       attachmentCollection.insert_one(
-        {"name": file.filename, "location": filepath, "date": time.time(), "angle": request.form['angle'], "weight": request.form['weight'], "notes": request.form['notes'], "user": session['username']}
+        {"name": file.filename, "location": location, "date": time.time(), "angle": request.form['angle'], "weight": request.form['weight'], "notes": request.form['notes'], "user": session['username']}
       )
       return render_template('pictures.html', message="Upload Succesful", success=1)
   else:
-    return render_template('pictures.html')
+    picDict = list(attachmentCollection.find({"user": session['username']}))
+    return render_template('pictures.html', picDict=picDict)
 
 #Helper functions. TODO move to utils
 def loginUser(username, password):
