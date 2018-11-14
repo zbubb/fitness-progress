@@ -57,6 +57,13 @@
             {% endif %}
             <h1>Workouts</h1>
             <ul class="list-group">
+              {% for wo in workoutList %}
+                <li class="list-group-item">
+                   <h3>Date: {{ wo['date'] }}</h3>
+                   <strong>Type:</strong> {{ wo['type'] }}<br>
+                   <strong>Notes:</strong> {{ wo['notes'] }}
+                </li>
+              {% endfor %}
             </ul>
           </div>
         </div>

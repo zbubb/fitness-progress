@@ -84,9 +84,11 @@ def workouts():
         "user": session['username']
       }
     )
-    return render_template('workouts.html', message="Succesful", success=1)
+    workoutList = list(workoutCollection.find({"user": session['username']}).sort("date", 1))
+    return render_template('workouts.html', message="Succesful", success=1, workoutList=workoutList)
   else:
-    return render_template('workouts.html')
+    workoutList = list(workoutCollection.find({"user": session['username']}).sort("date", 1))
+    return render_template('workouts.html', workoutList=workoutList)
 
 #Helper functions. TODO move to utils
 def loginUser(username, password):
