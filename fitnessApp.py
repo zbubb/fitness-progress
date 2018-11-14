@@ -10,6 +10,7 @@ client = MongoClient()
 db = client.fitnessDB
 userCollection = db.users
 attachmentCollection = db.attachments
+workoutCollection = db.workouts
 
 UPLOAD_FOLDER = '/home/zack/jhu/agile/fitness-progress/static/pictures'
 PICTURE_FOLDER = '/static/pictures'
@@ -52,13 +53,40 @@ def pictures():
       file.save(filepath)
       location = os.path.join(PICTURE_FOLDER, secure_filename(file.filename))
       attachmentCollection.insert_one(
-        {"name": file.filename, "location": location, "date": request.form['date'], "angle": request.form['angle'], "weight": request.form['weight'], "notes": request.form['notes'], "user": session['username']}
+        {
+          "name": file.filename,
+          "location": location,
+          "date": request.form['date'],
+          "angle": request.form['angle'],
+          "weight": request.form['weight'],
+          "notes": request.form['notes'],
+          "user": session['username']
+        }
       )
       picList = list(attachmentCollection.find({"user": session['username']}).sort("date", 1))
       return render_template('pictures.html', message="Upload Succesful", success=1, picDict=makePictureDict(picList))
   else:
     picList = list(attachmentCollection.find({"user": session['username']}).sort("date", 1))
     return render_template('pictures.html', picDict=makePictureDict(picList))
+
+@app.route('/workouts', methods=['GET', 'POST'])
+def workouts():
+  if request.method == 'POST':
+    if request.form['type'] == 'other':
+      workoutType =  request.form['otherType']
+    else:
+      workoutType = request.form['type']
+    workoutCollection.insert_one(
+      {
+        "type": workoutType,
+        "date": request.form['date'],
+        "notes": request.form['notes'],
+        "user": session['username']
+      }
+    )
+    return render_template('workouts.html', message="Succesful", success=1)
+  else:
+    return render_template('workouts.html')
 
 #Helper functions. TODO move to utils
 def loginUser(username, password):
