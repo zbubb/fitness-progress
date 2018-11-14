@@ -13,7 +13,7 @@
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Navbar</a>
+      <a class="navbar-brand" href="/">Fitness App</a>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link" href="/">Home</a>
@@ -43,6 +43,10 @@
               <strong>Notes</strong><br>
               <textarea name="notes" rows="5"></textarea>
             </div>
+            <div class="group mb-3">
+              <strong>Date</strong><br>
+              <input type="date" name="date">
+            </div>
             <input type=file name=file>
             <input class="btn mt-2" type=submit value=Upload>
           </form>
@@ -56,11 +60,31 @@
             {% endif %}
             <h1>Pictures</h1>
             <ul class="list-group">
-              {% for pic in picDict %}
+              {% for date in picDict %}
                 <li class="list-group-item">
-                  <strong>Weight:</strong> {{ pic.weight }}<br>
-                  <strong>Notes:</strong> {{ pic.notes }}<br>
-                  <img  src="{{ pic.location }}" style="height: 250px;"><!--style="transform:rotate(90deg);" class="img-fluid"-->
+                  <div class="row">
+                    <h3>Date: {{ date }}</h3>
+                  </div>
+                  <div class="row">
+                    <div class="col-4" style="border-style: solid; border-width: 1px; border-color: lightgray">
+                      <h5>Front</h5><br>
+                      <strong>Weight:</strong> {{ picDict[date]['front']['weight'] }}<br>
+                      <strong>Notes:</strong> {{ picDict[date]['front']['notes'] }}<br>
+                      <img class="img-fluid" src="{{ picDict[date]['front']['location'] }}">
+                    </div>
+                    <div class="col-4" style="border-style: solid; border-width: 1px; border-color: lightgray">
+                      <h5>Back</h5><br>
+                      <strong>Weight:</strong> {{ picDict[date]['back']['weight'] }}<br>
+                      <strong>Notes:</strong> {{ picDict[date]['back']['notes'] }}<br>
+                      <img class="img-fluid" src="{{ picDict[date]['back']['location'] }}">
+                    </div>
+                    <div class="col-4" style="border-style: solid; border-width: 1px; border-color: lightgray">
+                      <h5>Side</h5><br>
+                      <strong>Weight:</strong> {{ picDict[date]['side']['weight'] }}<br>
+                      <strong>Notes:</strong> {{ picDict[date]['side']['notes'] }}<br>
+                      <img class="img-fluid" src="{{ picDict[date]['side']['location'] }}">
+                    </div>
+                  </div>
                 </li>
               {% endfor %}
             </ul>

@@ -1,5 +1,4 @@
 import os
-import time
 from flask import Flask, render_template, request, session, redirect
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
@@ -53,12 +52,13 @@ def pictures():
       file.save(filepath)
       location = os.path.join(PICTURE_FOLDER, secure_filename(file.filename))
       attachmentCollection.insert_one(
-        {"name": file.filename, "location": location, "date": time.time(), "angle": request.form['angle'], "weight": request.form['weight'], "notes": request.form['notes'], "user": session['username']}
+        {"name": file.filename, "location": location, "date": request.form['date'], "angle": request.form['angle'], "weight": request.form['weight'], "notes": request.form['notes'], "user": session['username']}
       )
-      return render_template('pictures.html', message="Upload Succesful", success=1)
+      picList = list(attachmentCollection.find({"user": session['username']}).sort("date", 1))
+      return render_template('pictures.html', message="Upload Succesful", success=1, picDict=makePictureDict(picList))
   else:
-    picDict = list(attachmentCollection.find({"user": session['username']}))
-    return render_template('pictures.html', picDict=picDict)
+    picList = list(attachmentCollection.find({"user": session['username']}).sort("date", 1))
+    return render_template('pictures.html', picDict=makePictureDict(picList))
 
 #Helper functions. TODO move to utils
 def loginUser(username, password):
@@ -70,3 +70,17 @@ def loginUser(username, password):
 
 def allowed_file(filename):
   return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def makePictureDict(picList):
+  picDict = {}
+  for pic in picList:
+    if pic['date'] in picDict:
+      picDict[pic['date']][pic['angle']] = pic
+    else:
+      picDict[pic['date']] = {}
+      picDict[pic['date']]['front'] = {}
+      picDict[pic['date']]['back'] = {}
+      picDict[pic['date']]['side'] = {}
+      picDict[pic['date']][pic['angle']] = pic
+
+  return picDict
