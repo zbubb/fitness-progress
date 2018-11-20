@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, session, redirect
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 
+from PIL import Image, ExifTags
+
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
@@ -51,6 +53,7 @@ def pictures():
     if file and allowed_file(file.filename):
       filepath = os.path.join(UPLOAD_FOLDER, secure_filename(file.filename))
       file.save(filepath)
+      rotateImage(filepath)
       location = os.path.join(PICTURE_FOLDER, secure_filename(file.filename))
       attachmentCollection.insert_one(
         {
@@ -114,3 +117,25 @@ def makePictureDict(picList):
       picDict[pic['date']][pic['angle']] = pic
 
   return picDict
+
+def rotateImage(filepath):
+  try:
+    image=Image.open(filepath)
+    for orientation in ExifTags.TAGS.keys():
+      if ExifTags.TAGS[orientation]=='Orientation':
+        break
+    exif=dict(image._getexif().items())
+
+    if exif[orientation] == 3:
+      image=image.rotate(180, expand=True)
+    elif exif[orientation] == 6:
+      image=image.rotate(270, expand=True)
+    elif exif[orientation] == 8:
+      image=image.rotate(90, expand=True)
+    image.save(filepath)
+    image.close()
+
+  except (AttributeError, KeyError, IndexError):
+    # cases: image don't have getexi
+    print("HERE");
+    pass
