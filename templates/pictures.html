@@ -48,7 +48,17 @@
               <input type="date" name="date">
             </div>
             <input type=file name=file>
-            <input class="btn mt-2" type=submit value=Upload>
+            <input class="btn btn-primary mt-2" type=submit value=Upload>
+          </form>
+          <hr>
+          <h3>Compare Pictures</h3>
+          <form method=post action=compare>
+            {% for date in picDict %}
+              {% for angle in picDict[date] %}
+                <input type="checkbox" name="{{ date }},{{ angle }}" value="{{ date }},{{ angle }}"> {{ date }} - {{ angle }}<br>
+              {% endfor %}
+            {% endfor %}
+            <input class="btn btn-primary mt-2" type=submit value=Compare>
           </form>
         </div>
         <div class="col-10">
@@ -62,26 +72,26 @@
             <ul class="list-group">
               {% for date in picDict %}
                 <li class="list-group-item">
-                  <div class="row">
+                  <div class="row ml-1">
                     <h3>Date: {{ date }}</h3>
                   </div>
                   <div class="row">
                     <div class="col-4" style="border-style: solid; border-width: 1px; border-color: lightgray">
                       <h5>Front</h5><br>
                       <strong>Weight:</strong> {{ picDict[date]['front']['weight'] }}<br>
-                      <strong>Notes:</strong> {{ picDict[date]['front']['notes'] }}<br>
+                      <strong>Notes:</strong> <div style="white-space:pre-wrap;">{{ picDict[date]['front']['notes'] }}</div><br>
                       <img class="img-fluid" src="{{ picDict[date]['front']['location'] }}">
                     </div>
                     <div class="col-4" style="border-style: solid; border-width: 1px; border-color: lightgray">
                       <h5>Back</h5><br>
                       <strong>Weight:</strong> {{ picDict[date]['back']['weight'] }}<br>
-                      <strong>Notes:</strong> {{ picDict[date]['back']['notes'] }}<br>
+                      <strong>Notes:</strong> <div style="white-space:pre-wrap;">{{ picDict[date]['back']['notes'] }}</div><br>
                       <img class="img-fluid" src="{{ picDict[date]['back']['location'] }}">
                     </div>
                     <div class="col-4" style="border-style: solid; border-width: 1px; border-color: lightgray">
                       <h5>Side</h5><br>
                       <strong>Weight:</strong> {{ picDict[date]['side']['weight'] }}<br>
-                      <strong>Notes:</strong> {{ picDict[date]['side']['notes'] }}<br>
+                      <strong>Notes:</strong> <div style="white-space:pre-wrap;">{{ picDict[date]['side']['notes'] }}</div><br>
                       <img class="img-fluid" src="{{ picDict[date]['side']['location'] }}">
                     </div>
                   </div>

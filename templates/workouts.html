@@ -31,10 +31,10 @@
           <form method=post action=workouts>
             <div class="group mb-3">
               <strong>Type</strong><br>
-              <input type="radio" name="type" value="strength"> Strength<br>
-              <input type="radio" name="type" value="power"> Power<br>
-              <input type="radio" name="type" value="cardio"> Cardio<br>
-              <input type="radio" name="type" value="other"> Other<br> 
+              <input type="radio" name="type" value="Strength"> Strength<br>
+              <input type="radio" name="type" value="Power"> Power<br>
+              <input type="radio" name="type" value="Endurance"> Endurance<br>
+              <input type="radio" name="type" value="Other"> Other<br> 
               <input type="text" name="otherType">
             </div>
             <div class="group mb-3">
@@ -61,7 +61,7 @@
                 <li class="list-group-item">
                    <h3>Date: {{ wo['date'] }}</h3>
                    <strong>Type:</strong> {{ wo['type'] }}<br>
-                   <strong>Notes:</strong> {{ wo['notes'] }}
+                   <strong>Notes:</strong> <div style="white-space:pre-wrap;">{{ wo['notes'] }}</div>
                 </li>
               {% endfor %}
             </ul>

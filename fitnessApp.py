@@ -72,10 +72,23 @@ def pictures():
     picList = list(attachmentCollection.find({"user": session['username']}).sort("date", 1))
     return render_template('pictures.html', picDict=makePictureDict(picList))
 
+@app.route('/compare', methods=['GET', 'POST'])
+def compare():
+  if request.method == 'POST':
+    picList = []
+    if len(request.form) != 2:
+      picList = list(attachmentCollection.find({"user": session['username']}).sort("date", 1))
+      return render_template('pictures.html', message="Please Only Select 2 Images", success=0, picDict=makePictureDict(picList))
+    for entry in request.form:
+      angle = entry.split(",")[1]
+      date = entry.split(",")[0]
+      picList.append(attachmentCollection.find_one({"user": session['username'], "date": date, "angle": angle}))
+  return render_template('compare.html', picDict=picList)
+
 @app.route('/workouts', methods=['GET', 'POST'])
 def workouts():
   if request.method == 'POST':
-    if request.form['type'] == 'other':
+    if request.form['type'] == 'Other':
       workoutType =  request.form['otherType']
     else:
       workoutType = request.form['type']
