@@ -106,6 +106,13 @@ def workouts():
     workoutList = list(workoutCollection.find({"user": session['username']}).sort("date", 1))
     return render_template('workouts.html', workoutList=workoutList)
 
+@app.route('/workouts/edit', methods=['GET', 'POST'])
+def editWorkout():
+  if request.method == 'POST':
+    pass
+  else:
+    return render_template('editWorkouts.html')
+
 #Helper functions. TODO move to utils
 def loginUser(username, password):
   user = userCollection.find_one({"username": username})
@@ -120,10 +127,12 @@ def allowed_file(filename):
 def makePictureDict(picList):
   picDict = {}
   for pic in picList:
+    dateList = pic['date'].split("-")
     if pic['date'] in picDict:
       picDict[pic['date']][pic['angle']] = pic
     else:
       picDict[pic['date']] = {}
+      picDict[pic['date']]['date'] = "{}/{}/{}".format(dateList[1], dateList[2], dateList[0])
       picDict[pic['date']]['front'] = {}
       picDict[pic['date']]['back'] = {}
       picDict[pic['date']]['side'] = {}

@@ -45,7 +45,7 @@
               <strong>Date</strong><br>
               <input type="date" name="date">
             </div>
-          <input class="btn" type=submit value=Submit>
+          <input class="btn btn-primary" type=submit value=Submit>
           </form>
         </div>
         <div class="col-10">
@@ -59,7 +59,7 @@
             <ul class="list-group">
               {% for wo in workoutList %}
                 <li class="list-group-item">
-                   <h3>Date: {{ wo['date'] }}</h3>
+                   <h3>Date: {{ wo['date'] }}</h3><form action=workouts/edit><input class="btn btn-primary float-right" type=submit value=Edit></form>
                    <strong>Type:</strong> {{ wo['type'] }}<br>
                    <strong>Notes:</strong> <div style="white-space:pre-wrap;">{{ wo['notes'] }}</div>
                 </li>
