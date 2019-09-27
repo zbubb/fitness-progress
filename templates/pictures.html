@@ -55,7 +55,9 @@
           <form method=post action=compare>
             {% for date in picDict %}
               {% for angle in picDict[date] %}
-                <input type="checkbox" name="{{ date }},{{ angle }}" value="{{ date }},{{ angle }}"> {{ date }} - {{ angle }}<br>
+                {% if angle != 'date' %}
+                  <input type="checkbox" name="{{ date }},{{ angle }}" value="{{ date }},{{ angle }}"> {{ date }} - {{ angle }}<br>
+                {% endif %}
               {% endfor %}
             {% endfor %}
             <input class="btn btn-primary mt-2" type=submit value=Compare>
@@ -63,7 +65,7 @@
         </div>
         <div class="col-10">
           <div class="container">
-            {% if message and success%}
+            {% if message and success %}
               <p style="color:green;">{{ message }}!</p>
             {% elif message %}
               <p style="color:red;">{{ message }}!</p>
