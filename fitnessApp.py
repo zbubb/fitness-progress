@@ -127,7 +127,6 @@ def allowed_file(filename):
 def makePictureDict(picList):
   picDict = {}
   for pic in picList:
-    print(pic)
     dateList = pic['date'].split("-")
     if pic['date'] in picDict:
       picDict[pic['date']][pic['angle']] = pic
@@ -139,7 +138,6 @@ def makePictureDict(picList):
       picDict[pic['date']]['side'] = {}
       picDict[pic['date']][pic['angle']] = pic
 
-  print(picDict)
   return picDict
 
 def rotateImage(filepath):
